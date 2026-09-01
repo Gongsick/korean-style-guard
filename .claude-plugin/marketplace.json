@@ -1,12 +1,19 @@
 {
   "name": "korean-style-guard",
-  "owner": { "name": "진격의제이슨" },
+  "owner": {
+    "name": "진격의제이슨"
+  },
+  "metadata": {
+    "description": "한국어 산출물에서 AI 문체를 걸러내는 스킬 모음",
+    "version": "1.0.0"
+  },
   "plugins": [
     {
       "name": "korean-style-guard",
       "source": "./plugins/korean-style-guard",
-      "description": "한국어 글에서 AI 문체를 걸러내고 지정 문체를 6개 축으로 정합시킨다.",
-      "category": "writing"
+      "description": "한국어 글에서 AI 문체를 걸러내고 지정 문체(음슴체·구어체·해요체·격식체)를 6개 축으로 정합시킨다. 리듬 측정 스크립트 포함.",
+      "category": "writing",
+      "keywords": ["korean", "writing", "style", "ai-detection", "humanize"]
     }
   ]
 }
