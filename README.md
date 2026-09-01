@@ -24,10 +24,16 @@ Claude Code와 Cowork 양쪽에서 쓴다. 설치하면 한국어 글을 쓰거�
 **1. 문체 정합 (6개 축)**
 문체는 종결어미가 아니라 어미·어휘·문장 길이·관형절 중첩·담화표지·조사 생략의 묶음이다. 어미만 맞고 나머지가 안 따라오면 어색해진다. 음슴체는 공문서형과 캐주얼형 두 종류이고, `~잖아`·`~거든`·`~더라`에는 각각 사용 조건이 있다.
 
-**2. 리듬 정량 기준**
-어휘를 다 고쳐도 남는 기계 냄새의 정체. 문장 길이 변동계수 0.40 미만이면 길이가 한 곳에 몰린 것이다.
+**2. 마무리를 닫지 않기**
+AI는 마지막 문장을 정리·조언·격언·덕담으로 닫는다. 실측에서 AI 20편 중 16편(80%), 사람 8편 중 0편(0%)이었다. 격식체 업무 메일은 사람도 100% 닫으므로 예외로 뒀다.
 
-**3. 과교정 방지**
+**3. 구어 표지 부재 잡기**
+담화표지·말줄임표·감탄부호·물결표·`ㅋㅋ`. 사람 해요체는 다섯 항목 전부 쓰고 **AI는 정확히 0**이었다. 다른 규칙이 "나쁜 것의 존재"를 잡는다면 이건 "있어야 할 것의 부재"를 잡는다.
+
+**4. 리듬 정량 기준**
+문장 길이 변동계수는 사람 0.55(0.36~0.80), AI 0.20~0.43이었다.
+
+**5. 과교정 방지**
 금지어 목록을 기계적으로 적용하면 새로운 AI 티가 생긴다. 문장을 전부 짧게 자르면 균일도가 그대로라 여전히 티가 난다. 치환표에는 "오히려 이 표현이 맞는 맥락" 열이 붙어 있다.
 
 ## 점검 스크립트
@@ -35,17 +41,26 @@ Claude Code와 Cowork 양쪽에서 쓴다. 설치하면 한국어 글을 쓰거�
 표준 라이브러리만 쓴다. Claude 없이 단독으로도 돌아간다.
 
 ```bash
-python3 plugins/korean-style-guard/skills/korean-style-guard/scripts/check_style.py 원고.md
+S=plugins/korean-style-guard/skills/korean-style-guard/scripts/check_style.py
+python3 $S 원고.md                  # 리듬만
+python3 $S --style 해요체 원고.md     # 문체 정합까지
+python3 $S --list-styles
 ```
+
+문체는 `음슴체-캐주얼`, `음슴체-공문`, `반말-구어`, `해요체`, `격식-합쇼체` 다섯 가지이고 `음슴체`·`반말`·`격식체` 같은 별칭도 받는다.
 
 `examples/` 표본으로 판별력을 확인할 수 있다.
 
-| | `ai-style.txt` | `human-formal.txt` |
+임계값은 사람 글 21편(27,464자)과 AI 20편을 대조해 정했다. 근거와 수치는 `references/calibration-2026-09.md`에 있다.
+
+| 지표 | 사람 | AI |
 |---|---|---|
-| 길이 변동계수 | 0.20 ▲ | 0.39 |
-| 최빈 종결형 | `습니다` 60% ▲ | `습니다` 57% |
-| 문두 접속사 | 40% ▲ | 0% |
-| 어휘 적발 | 4건 | 0건 |
+| 닫는 마무리 (캐주얼) | 0~4% | 50~100% |
+| 구어 표지 (해요체) | 8~19/1천자 | 0.00 |
+| 길이 변동계수 | 0.55 | 0.20~0.43 |
+| 대구·부정 병치 | 0.00/1천자 | 0.63 |
+
+사람 글 21편 오탐 2건(5%).
 
 ▲는 검토 신호이지 오류 판정이 아니다.
 
@@ -55,8 +70,11 @@ python3 plugins/korean-style-guard/skills/korean-style-guard/scripts/check_style
 plugins/korean-style-guard/
 ├── skills/korean-style-guard/
 │   ├── SKILL.md              # 작업 규칙 (Claude가 읽는 본체)
+│   ├── rules.json            # 규칙 원본 — 항목 추가는 여기 한 곳만
 │   ├── scripts/check_style.py
-│   └── references/style-guide.md   # 근거·확장 목록 (L1~L5 5층 구조)
+│   └── references/
+│       ├── style-guide.md            # 배경 해설 (L1~L5 5층 구조)
+│       └── calibration-2026-09.md    # 임계값 근거. style-guide와 어긋나면 이쪽이 우선
 └── commands/check-style.md   # /korean-style-guard:check-style
 ```
 
