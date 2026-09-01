@@ -1,0 +1,12 @@
+{
+  "name": "korean-style-guard",
+  "owner": { "name": "진격의제이슨" },
+  "plugins": [
+    {
+      "name": "korean-style-guard",
+      "source": "./plugins/korean-style-guard",
+      "description": "한국어 글에서 AI 문체를 걸러내고 지정 문체를 6개 축으로 정합시킨다.",
+      "category": "writing"
+    }
+  ]
+}
