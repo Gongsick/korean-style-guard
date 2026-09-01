@@ -1,0 +1,10 @@
+{
+  "name": "korean-style-guard",
+  "description": "한국어 글에서 AI 문체를 걸러내고 지정 문체를 6개 축으로 정합시킨다. 어휘 금지 목록, 리듬 정량 기준, 과교정 방지 규칙, 측정 스크립트를 포함한다.",
+  "version": "1.0.0",
+  "author": {
+    "name": "진격의제이슨"
+  },
+  "keywords": ["korean", "writing", "style", "humanize", "ai-detection"],
+  "license": "MIT"
+}
